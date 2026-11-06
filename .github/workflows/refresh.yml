@@ -1,0 +1,56 @@
+name: Stock Tracker Refresh
+
+on:
+  schedule:
+    # 9:45 AM ET = 14:45 UTC (EST) / 13:45 UTC (EDT)
+    # 12:45 PM ET = 17:45 UTC (EST) / 16:45 UTC (EDT)
+    # 3:00 PM ET = 20:00 UTC (EST) / 19:00 UTC (EDT)
+    # Using EDT (Nov-Mar is EST, so adjust +1hr in winter)
+    - cron: '45 13 * * 1-5'   # 9:45 AM ET (EDT)
+    - cron: '45 16 * * 1-5'   # 12:45 PM ET (EDT)
+    - cron: '0 19 * * 1-5'    # 3:00 PM ET (EDT)
+    # EST versions (Nov-Mar)
+    - cron: '45 14 * * 1-5'   # 9:45 AM ET (EST)
+    - cron: '45 17 * * 1-5'   # 12:45 PM ET (EST)
+    - cron: '0 20 * * 1-5'    # 3:00 PM ET (EST)
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run refresh
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RH_USERNAME: ${{ secrets.RH_USERNAME }}
+          RH_PASSWORD: ${{ secrets.RH_PASSWORD }}
+          RH_TOTP_SECRET: ${{ secrets.RH_TOTP_SECRET }}
+          GITHUB_REPO_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO_NAME: ${{ github.event.repository.name }}
+        run: python run.py
+
+      - name: Deploy to GitHub Pages
+        run: |
+          git config user.name "Stock Tracker Bot"
+          git config user.email "bot@stocktracker.local"
+          git add docs/
+          git add data/
+          git diff --cached --quiet && echo "No changes" || (git commit -m "Refresh $(date -u +%Y-%m-%dT%H:%M)" && git push)

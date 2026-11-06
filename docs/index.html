@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Tracker | 2026-11-06 09:05 UTC</title>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --border: #30363d;
+  --text: #e6edf3; --text-dim: #8b949e; --accent: #58a6ff;
+  --green: #3fb950; --red: #f85149; --yellow: #d29922;
+  --hold-bg: #1a2332;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,monospace; font-size:13px; }
+.header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 16px; position:sticky; top:0; z-index:100; }
+.header h1 { font-size:16px; font-weight:600; }
+.header .meta { font-size:11px; color:var(--text-dim); margin-top:4px; }
+.stats { display:flex; gap:16px; margin-top:6px; font-size:11px; }
+.stats span { background:var(--border); padding:2px 8px; border-radius:4px; }
+.filters { padding:8px 16px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; }
+.filters input { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:4px 8px; border-radius:4px; font-size:12px; width:200px; }
+.filters select { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:4px 8px; border-radius:4px; font-size:12px; }
+.table-wrap { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; min-width:1600px; }
+th { background:var(--surface); position:sticky; top:64px; z-index:50; padding:6px 8px; text-align:left;
+     font-size:11px; font-weight:600; color:var(--text-dim); border-bottom:2px solid var(--border);
+     cursor:pointer; white-space:nowrap; user-select:none; }
+th:hover { color:var(--accent); }
+th.sorted-asc::after { content:" ▲"; }
+th.sorted-desc::after { content:" ▼"; }
+td { padding:5px 8px; border-bottom:1px solid var(--border); white-space:nowrap; font-size:12px; }
+tr:hover { background:rgba(88,166,255,0.05); }
+tr.held { background:var(--hold-bg); }
+.ticker { font-weight:700; color:var(--accent); }
+.name { color:var(--text-dim); max-width:160px; overflow:hidden; text-overflow:ellipsis; }
+.num { text-align:right; font-variant-numeric:tabular-nums; }
+.pct { text-align:right; font-variant-numeric:tabular-nums; }
+.pos { color:var(--green); }
+.neg { color:var(--red); }
+.hold-yes { color:var(--green); font-weight:700; }
+.hold-no { color:var(--text-dim); }
+.score { display:inline-block; padding:1px 6px; border-radius:3px; font-weight:600; font-size:11px; }
+.score-high { background:rgba(63,185,80,0.15); color:var(--green); }
+.score-mid { background:rgba(210,153,34,0.15); color:var(--yellow); }
+.score-low { background:rgba(248,81,73,0.15); color:var(--red); }
+.intuition { color:var(--yellow); font-weight:600; }
+.source-badge { font-size:9px; padding:1px 4px; border-radius:2px; margin-left:4px; }
+.source-user { background:rgba(63,185,80,0.2); color:var(--green); }
+.source-algo { background:rgba(88,166,255,0.2); color:var(--accent); }
+.sector { font-size:10px; color:var(--text-dim); }
+@media (max-width:768px) {
+  .header h1 { font-size:14px; }
+  td, th { padding:4px 6px; font-size:11px; }
+  table { min-width:1200px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Stock Tracker</h1>
+  <div class="meta">Last refresh: 2026-11-06 09:05 UTC | Next: auto-scheduled</div>
+  <div class="stats">
+    <span>5 stocks</span>
+    <span>5 with intuition points</span>
+    <span>2 held in portfolio</span>
+  </div>
+</div>
+
+<div class="filters">
+  <input type="text" id="search" placeholder="Search ticker or name..." oninput="filterTable()">
+  <select id="holdFilter" onchange="filterTable()">
+    <option value="all">All stocks</option>
+    <option value="held">Held only</option>
+    <option value="not-held">Not held</option>
+  </select>
+  <select id="sectorFilter" onchange="filterTable()">
+    <option value="all">All sectors</option>
+  </select>
+</div>
+
+<div class="table-wrap">
+<table id="stockTable">
+<thead>
+<tr>
+  <th data-col="rank" class="num">#</th>
+  <th data-col="ticker">Ticker</th>
+  <th data-col="name">Name</th>
+  <th data-col="sector">Sector</th>
+  <th data-col="price" class="num">Price</th>
+  <th data-col="market_cap_b" class="num">MCap $B</th>
+  <th data-col="52w_low" class="num">52W Low</th>
+  <th data-col="52w_high" class="num">52W High</th>
+  <th data-col="above_52w_low_pct" class="num">Above Low%</th>
+  <th data-col="1D" class="num">1D%</th>
+  <th data-col="1W" class="num">1W%</th>
+  <th data-col="1M" class="num">1M%</th>
+  <th data-col="3M" class="num">3M%</th>
+  <th data-col="6M" class="num">6M%</th>
+  <th data-col="1Y" class="num">1Y%</th>
+  <th data-col="intuition_point" class="num">Intuition $</th>
+  <th data-col="upside_pct" class="num">Upside%</th>
+  <th data-col="crossings" class="num">Crosses</th>
+  <th data-col="crossing_quarters" class="num">Qtrs</th>
+  <th data-col="personal_score" class="num">Personal</th>
+  <th data-col="evidence_score" class="num">Evidence</th>
+  <th data-col="i_hold">Hold?</th>
+  <th data-col="shares_held" class="num">Shares</th>
+  <th data-col="avg_price" class="num">Avg$</th>
+  <th data-col="holding_pnl_pct" class="num">P&L%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="" data-rank="1" data-ticker="CLS" data-name="CLS Inc" data-sector="Tech" data-price="205.63999938964844" data-market_cap_b="50" data-52w_low="205.63999938964844" data-52w_high="472.3999938964844" data-above_52w_low_pct="0" data-1D="-2.1" data-1W="-5.3" data-1M="-15.2" data-3M="-22.0" data-6M="-30.0" data-1Y="-20.0" data-intuition_point="328" data-upside_pct="59.5" data-crossings="13" data-crossing_quarters="4" data-personal_score="9.7" data-evidence_score="8.0" data-i_hold="false" data-shares_held="0" data-avg_price="0" data-holding_pnl_pct="0">
+  <td class="num">1</td>
+  <td class="ticker">CLS</td>
+  <td class="name" title="CLS Inc">CLS Inc</td>
+  <td class="sector">Tech</td>
+  <td class="num">205.64</td>
+  <td class="num">50.0</td>
+  <td class="num">205.64</td>
+  <td class="num">472.40</td>
+  <td class="pct ">0.0%</td>
+  <td class="pct neg">-2.1%</td>
+  <td class="pct neg">-5.3%</td>
+  <td class="pct neg">-15.2%</td>
+  <td class="pct neg">-22.0%</td>
+  <td class="pct neg">-30.0%</td>
+  <td class="pct neg">-20.0%</td>
+  <td class="num intuition">$328<span class="source-badge source-user">manual</span></td>
+  <td class="pct pos">+59.5%</td>
+  <td class="num">13</td>
+  <td class="num">4</td>
+  <td class="num"><span class="score score-high">9.7</span></td>
+  <td class="num"><span class="score score-high">8.0</span></td>
+  <td class="hold-no">no</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="pct">—</td>
+</tr>
+<tr class="held" data-rank="2" data-ticker="NVDA" data-name="NVDA Inc" data-sector="Tech" data-price="181.60000610351562" data-market_cap_b="50" data-52w_low="164.79331970214844" data-52w_high="239.24000549316406" data-above_52w_low_pct="10.2" data-1D="-2.1" data-1W="-5.3" data-1M="-15.2" data-3M="-22.0" data-6M="-30.0" data-1Y="-20.0" data-intuition_point="205.21" data-upside_pct="13.0" data-crossings="12" data-crossing_quarters="4" data-personal_score="7.7" data-evidence_score="8.0" data-i_hold="true" data-shares_held="2.5" data-avg_price="150" data-holding_pnl_pct="21.1">
+  <td class="num">2</td>
+  <td class="ticker">NVDA</td>
+  <td class="name" title="NVDA Inc">NVDA Inc</td>
+  <td class="sector">Tech</td>
+  <td class="num">181.60</td>
+  <td class="num">50.0</td>
+  <td class="num">164.79</td>
+  <td class="num">239.24</td>
+  <td class="pct pos">+10.2%</td>
+  <td class="pct neg">-2.1%</td>
+  <td class="pct neg">-5.3%</td>
+  <td class="pct neg">-15.2%</td>
+  <td class="pct neg">-22.0%</td>
+  <td class="pct neg">-30.0%</td>
+  <td class="pct neg">-20.0%</td>
+  <td class="num intuition">$205<span class="source-badge source-algo">auto</span></td>
+  <td class="pct pos">+13.0%</td>
+  <td class="num">12</td>
+  <td class="num">4</td>
+  <td class="num"><span class="score score-mid">7.7</span></td>
+  <td class="num"><span class="score score-high">8.0</span></td>
+  <td class="hold-yes">YES</td>
+  <td class="num">2.5</td>
+  <td class="num">150.00</td>
+  <td class="pct pos">+21.1%</td>
+</tr>
+<tr class="" data-rank="3" data-ticker="RDDT" data-name="RDDT Inc" data-sector="Tech" data-price="93.80999755859375" data-market_cap_b="50" data-52w_low="90.97000122070312" data-52w_high="258.92999267578125" data-above_52w_low_pct="3.1" data-1D="-2.1" data-1W="-5.3" data-1M="-15.2" data-3M="-22.0" data-6M="-30.0" data-1Y="-20.0" data-intuition_point="149.16" data-upside_pct="59.0" data-crossings="14" data-crossing_quarters="4" data-personal_score="9.7" data-evidence_score="8.0" data-i_hold="false" data-shares_held="0" data-avg_price="0" data-holding_pnl_pct="0">
+  <td class="num">3</td>
+  <td class="ticker">RDDT</td>
+  <td class="name" title="RDDT Inc">RDDT Inc</td>
+  <td class="sector">Tech</td>
+  <td class="num">93.81</td>
+  <td class="num">50.0</td>
+  <td class="num">90.97</td>
+  <td class="num">258.93</td>
+  <td class="pct pos">+3.1%</td>
+  <td class="pct neg">-2.1%</td>
+  <td class="pct neg">-5.3%</td>
+  <td class="pct neg">-15.2%</td>
+  <td class="pct neg">-22.0%</td>
+  <td class="pct neg">-30.0%</td>
+  <td class="pct neg">-20.0%</td>
+  <td class="num intuition">$149<span class="source-badge source-algo">auto</span></td>
+  <td class="pct pos">+59.0%</td>
+  <td class="num">14</td>
+  <td class="num">4</td>
+  <td class="num"><span class="score score-high">9.7</span></td>
+  <td class="num"><span class="score score-high">8.0</span></td>
+  <td class="hold-no">no</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="pct">—</td>
+</tr>
+<tr class="" data-rank="4" data-ticker="APP" data-name="APP Inc" data-sector="Tech" data-price="356.1000061035156" data-market_cap_b="50" data-52w_low="228.5" data-52w_high="733.5999755859375" data-above_52w_low_pct="55.8" data-1D="-2.1" data-1W="-5.3" data-1M="-15.2" data-3M="-22.0" data-6M="-30.0" data-1Y="-20.0" data-intuition_point="452.25" data-upside_pct="27.0" data-crossings="9" data-crossing_quarters="3" data-personal_score="7.5" data-evidence_score="7.5" data-i_hold="false" data-shares_held="0" data-avg_price="0" data-holding_pnl_pct="0">
+  <td class="num">4</td>
+  <td class="ticker">APP</td>
+  <td class="name" title="APP Inc">APP Inc</td>
+  <td class="sector">Tech</td>
+  <td class="num">356.10</td>
+  <td class="num">50.0</td>
+  <td class="num">228.50</td>
+  <td class="num">733.60</td>
+  <td class="pct pos">+55.8%</td>
+  <td class="pct neg">-2.1%</td>
+  <td class="pct neg">-5.3%</td>
+  <td class="pct neg">-15.2%</td>
+  <td class="pct neg">-22.0%</td>
+  <td class="pct neg">-30.0%</td>
+  <td class="pct neg">-20.0%</td>
+  <td class="num intuition">$452<span class="source-badge source-algo">auto</span></td>
+  <td class="pct pos">+27.0%</td>
+  <td class="num">9</td>
+  <td class="num">3</td>
+  <td class="num"><span class="score score-mid">7.5</span></td>
+  <td class="num"><span class="score score-mid">7.5</span></td>
+  <td class="hold-no">no</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="pct">—</td>
+</tr>
+<tr class="held" data-rank="5" data-ticker="TSLA" data-name="TSLA Inc" data-sector="Tech" data-price="343.69000244140625" data-market_cap_b="50" data-52w_low="298.32000732421875" data-52w_high="489.8800048828125" data-above_52w_low_pct="15.2" data-1D="-2.1" data-1W="-5.3" data-1M="-15.2" data-3M="-22.0" data-6M="-30.0" data-1Y="-20.0" data-intuition_point="402.12" data-upside_pct="17.0" data-crossings="16" data-crossing_quarters="5" data-personal_score="8.5" data-evidence_score="8.0" data-i_hold="true" data-shares_held="0" data-avg_price="0" data-holding_pnl_pct="0">
+  <td class="num">5</td>
+  <td class="ticker">TSLA</td>
+  <td class="name" title="TSLA Inc">TSLA Inc</td>
+  <td class="sector">Tech</td>
+  <td class="num">343.69</td>
+  <td class="num">50.0</td>
+  <td class="num">298.32</td>
+  <td class="num">489.88</td>
+  <td class="pct pos">+15.2%</td>
+  <td class="pct neg">-2.1%</td>
+  <td class="pct neg">-5.3%</td>
+  <td class="pct neg">-15.2%</td>
+  <td class="pct neg">-22.0%</td>
+  <td class="pct neg">-30.0%</td>
+  <td class="pct neg">-20.0%</td>
+  <td class="num intuition">$402<span class="source-badge source-algo">auto</span></td>
+  <td class="pct pos">+17.0%</td>
+  <td class="num">16</td>
+  <td class="num">5</td>
+  <td class="num"><span class="score score-high">8.5</span></td>
+  <td class="num"><span class="score score-high">8.0</span></td>
+  <td class="hold-yes">YES</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="pct">—</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<script>
+const DATA = [{"rank": 1, "ticker": "CLS", "name": "CLS Inc", "sector": "Tech", "industry": "Test", "price": 205.63999938964844, "market_cap_b": 50, "52w_low": 205.63999938964844, "52w_high": 472.3999938964844, "above_52w_low_pct": 0.0, "1D": -2.1, "1W": -5.3, "1M": -15.2, "3M": -22.0, "6M": -30.0, "1Y": -20.0, "3Y": null, "5Y": null, "intuition_point": 328, "intuition_low": null, "intuition_high": null, "upside_pct": 59.5, "crossings": 13, "crossing_quarters": 4, "crossing_dates": ["2025-10-29", "2025-11-10", "2025-11-26", "2025-12-08", "2026-01-13", "2026-01-27", "2026-04-09", "2026-07-21", "2026-07-28", "2026-08-12", "2026-09-08", "2026-09-11", "2026-09-17"], "intuition_source": "user_override", "personal_score": 9.7, "evidence_score": 8.0, "pe_ratio": 25, "forward_pe": 20, "revenue_growth": 0.3, "profit_margin": 0.15, "analyst_target": 267.331999206543, "recommendation": "buy", "i_hold": false, "shares_held": 0, "avg_price": 0, "invested": 0, "holding_pnl_pct": null, "last_updated": "2026-11-06"}, {"rank": 2, "ticker": "NVDA", "name": "NVDA Inc", "sector": "Tech", "industry": "Test", "price": 181.60000610351562, "market_cap_b": 50, "52w_low": 164.79331970214844, "52w_high": 239.24000549316406, "above_52w_low_pct": 10.2, "1D": -2.1, "1W": -5.3, "1M": -15.2, "3M": -22.0, "6M": -30.0, "1Y": -20.0, "3Y": null, "5Y": null, "intuition_point": 205.21, "intuition_low": 205.21, "intuition_high": 228.82, "upside_pct": 13.0, "crossings": 12, "crossing_quarters": 4, "crossing_dates": ["2025-10-29", "2025-11-03", "2026-04-24", "2026-05-06", "2026-06-08", "2026-06-15", "2026-06-18", "2026-07-10", "2026-07-14", "2026-07-21", "2026-08-03", "2026-11-03"], "intuition_source": "algorithm", "personal_score": 7.7, "evidence_score": 8.0, "pe_ratio": 25, "forward_pe": 20, "revenue_growth": 0.3, "profit_margin": 0.15, "analyst_target": 236.08000793457032, "recommendation": "buy", "i_hold": true, "shares_held": 2.5, "avg_price": 150, "invested": 375, "holding_pnl_pct": 21.1, "last_updated": "2026-11-06"}, {"rank": 3, "ticker": "RDDT", "name": "RDDT Inc", "sector": "Tech", "industry": "Test", "price": 93.80999755859375, "market_cap_b": 50, "52w_low": 90.97000122070312, "52w_high": 258.92999267578125, "above_52w_low_pct": 3.1, "1D": -2.1, "1W": -5.3, "1M": -15.2, "3M": -22.0, "6M": -30.0, "1Y": -20.0, "3Y": null, "5Y": null, "intuition_point": 149.16, "intuition_low": 157.6, "intuition_high": 236.4, "upside_pct": 59.0, "crossings": 14, "crossing_quarters": 4, "crossing_dates": ["2026-02-10", "2026-02-20", "2026-02-25", "2026-04-13", "2026-05-01", "2026-05-21", "2026-05-27", "2026-08-03", "2026-09-02", "2026-09-10", "2026-10-01", "2026-10-05", "2026-10-07", "2026-10-15"], "intuition_source": "algorithm", "personal_score": 9.7, "evidence_score": 8.0, "pe_ratio": 25, "forward_pe": 20, "revenue_growth": 0.3, "profit_margin": 0.15, "analyst_target": 121.95299682617188, "recommendation": "buy", "i_hold": false, "shares_held": 0, "avg_price": 0, "invested": 0, "holding_pnl_pct": null, "last_updated": "2026-11-06"}, {"rank": 4, "ticker": "APP", "name": "APP Inc", "sector": "Tech", "industry": "Test", "price": 356.1000061035156, "market_cap_b": 50, "52w_low": 228.5, "52w_high": 733.5999755859375, "above_52w_low_pct": 55.8, "1D": -2.1, "1W": -5.3, "1M": -15.2, "3M": -22.0, "6M": -30.0, "1Y": -20.0, "3Y": null, "5Y": null, "intuition_point": 452.25, "intuition_low": 455.81, "intuition_high": 715.76, "upside_pct": 27.0, "crossings": 9, "crossing_quarters": 3, "crossing_dates": ["2026-02-09", "2026-03-04", "2026-03-13", "2026-03-23", "2026-04-15", "2026-04-27", "2026-05-01", "2026-06-26", "2026-07-15"], "intuition_source": "algorithm", "personal_score": 7.5, "evidence_score": 7.5, "pe_ratio": 25, "forward_pe": 20, "revenue_growth": 0.3, "profit_margin": 0.15, "analyst_target": 462.9300079345703, "recommendation": "buy", "i_hold": false, "shares_held": 0, "avg_price": 0, "invested": 0, "holding_pnl_pct": null, "last_updated": "2026-11-06"}, {"rank": 5, "ticker": "TSLA", "name": "TSLA Inc", "sector": "Tech", "industry": "Test", "price": 343.69000244140625, "market_cap_b": 50, "52w_low": 298.32000732421875, "52w_high": 489.8800048828125, "above_52w_low_pct": 15.2, "1D": -2.1, "1W": -5.3, "1M": -15.2, "3M": -22.0, "6M": -30.0, "1Y": -20.0, "3Y": null, "5Y": null, "intuition_point": 402.12, "intuition_low": 402.12, "intuition_high": 467.42, "upside_pct": 17.0, "crossings": 16, "crossing_quarters": 5, "crossing_dates": ["2025-11-14", "2025-11-19", "2025-11-24", "2026-02-06", "2026-02-24", "2026-03-04", "2026-03-11", "2026-05-07", "2026-06-08", "2026-06-12", "2026-06-22", "2026-06-29", "2026-07-06", "2026-07-09", "2026-10-27", "2026-11-02"], "intuition_source": "algorithm", "personal_score": 8.5, "evidence_score": 8.0, "pe_ratio": 25, "forward_pe": 20, "revenue_growth": 0.3, "profit_margin": 0.15, "analyst_target": 446.79700317382816, "recommendation": "buy", "i_hold": true, "shares_held": 0, "avg_price": 0, "invested": 0, "holding_pnl_pct": null, "last_updated": "2026-11-06"}];
+
+// Populate sector filter
+const sectors = [...new Set(DATA.map(s => s.sector).filter(Boolean))].sort();
+const sf = document.getElementById('sectorFilter');
+sectors.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sf.appendChild(o); });
+
+// Sort
+let sortCol = 'rank', sortDir = 1;
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1;
+    else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc','sorted-desc'));
+    th.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+    sortTable();
+  });
+});
+
+function sortTable() {
+  const tbody = document.querySelector('#stockTable tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort((a, b) => {
+    let av = a.dataset[sortCol] || '';
+    let bv = b.dataset[sortCol] || '';
+    const an = parseFloat(av), bn = parseFloat(bv);
+    if (!isNaN(an) && !isNaN(bn)) return (an - bn) * sortDir;
+    return av.localeCompare(bv) * sortDir;
+  });
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+function filterTable() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const hold = document.getElementById('holdFilter').value;
+  const sector = document.getElementById('sectorFilter').value;
+  document.querySelectorAll('#stockTable tbody tr').forEach(tr => {
+    const ticker = (tr.dataset.ticker || '').toLowerCase();
+    const name = (tr.dataset.name || '').toLowerCase();
+    const iHold = tr.dataset.i_hold;
+    const sec = tr.dataset.sector || '';
+    let show = true;
+    if (search && !ticker.includes(search) && !name.includes(search)) show = false;
+    if (hold === 'held' && iHold !== 'true') show = false;
+    if (hold === 'not-held' && iHold === 'true') show = false;
+    if (sector !== 'all' && sec !== sector) show = false;
+    tr.style.display = show ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

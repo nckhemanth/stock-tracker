@@ -1,0 +1,7 @@
+yfinance>=0.2.31
+pandas>=2.0
+pytz
+exchange_calendars
+resend
+robin_stocks
+pyotp
