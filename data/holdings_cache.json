@@ -1,0 +1,1612 @@
+{
+  "LLY": {
+    "shares": 0.005408,
+    "avg_price": 924.56,
+    "equity": 5.0
+  },
+  "ARM": {
+    "shares": 0.00117,
+    "avg_price": 85.47,
+    "equity": 0.1
+  },
+  "AVGO": {
+    "shares": 0.000268,
+    "avg_price": 149.25,
+    "equity": 0.04
+  },
+  "SPOT": {
+    "shares": 0.01019,
+    "avg_price": 490.68,
+    "equity": 5.0
+  },
+  "IGM": {
+    "shares": 0.18294,
+    "avg_price": 81.99,
+    "equity": 15.0
+  },
+  "MRVL": {
+    "shares": 0.112395,
+    "avg_price": 115.66,
+    "equity": 13.0
+  },
+  "SOXX": {
+    "shares": 0.01899,
+    "avg_price": 53.19,
+    "equity": 1.01
+  },
+  "PSI": {
+    "shares": 0.0254,
+    "avg_price": 39.37,
+    "equity": 1.0
+  },
+  "VRT": {
+    "shares": 0.0342,
+    "avg_price": 58.48,
+    "equity": 2.0
+  },
+  "ROBO": {
+    "shares": 0.04379,
+    "avg_price": 45.67,
+    "equity": 2.0
+  },
+  "SPSC": {
+    "shares": 0.00797,
+    "avg_price": 125.47,
+    "equity": 1.0
+  },
+  "SITM": {
+    "shares": 0.00903,
+    "avg_price": 110.74,
+    "equity": 1.0
+  },
+  "FTV": {
+    "shares": 0.0155,
+    "avg_price": 48.39,
+    "equity": 0.75
+  },
+  "HZO": {
+    "shares": 0.16565,
+    "avg_price": 18.11,
+    "equity": 3.0
+  },
+  "LCII": {
+    "shares": 0.02566,
+    "avg_price": 77.94,
+    "equity": 2.0
+  },
+  "ONTO": {
+    "shares": 0.00986,
+    "avg_price": 101.42,
+    "equity": 1.0
+  },
+  "DHR": {
+    "shares": 0.01595,
+    "avg_price": 188.09,
+    "equity": 3.0
+  },
+  "NXPI": {
+    "shares": 0.01887,
+    "avg_price": 158.98,
+    "equity": 3.0
+  },
+  "CRM": {
+    "shares": 0.00412,
+    "avg_price": 242.72,
+    "equity": 1.0
+  },
+  "AXP": {
+    "shares": 0.00434,
+    "avg_price": 230.41,
+    "equity": 1.0
+  },
+  "IVV": {
+    "shares": 0.00193,
+    "avg_price": 518.13,
+    "equity": 1.0
+  },
+  "QLD": {
+    "shares": 0.02668,
+    "avg_price": 37.48,
+    "equity": 1.0
+  },
+  "CMG": {
+    "shares": 0.02059,
+    "avg_price": 48.57,
+    "equity": 1.0
+  },
+  "KKR": {
+    "shares": 0.01104,
+    "avg_price": 90.58,
+    "equity": 1.0
+  },
+  "URI": {
+    "shares": 0.0018,
+    "avg_price": 555.56,
+    "equity": 1.0
+  },
+  "PYPL": {
+    "shares": 0.03438,
+    "avg_price": 58.17,
+    "equity": 2.0
+  },
+  "TECL": {
+    "shares": 0.07339,
+    "avg_price": 40.88,
+    "equity": 3.0
+  },
+  "AXON": {
+    "shares": 0.00202,
+    "avg_price": 495.05,
+    "equity": 1.0
+  },
+  "BAC": {
+    "shares": 0.02932,
+    "avg_price": 34.11,
+    "equity": 1.0
+  },
+  "GS": {
+    "shares": 0.00213,
+    "avg_price": 469.48,
+    "equity": 1.0
+  },
+  "THO": {
+    "shares": 0.0148,
+    "avg_price": 67.57,
+    "equity": 1.0
+  },
+  "NVMI": {
+    "shares": 0.00635,
+    "avg_price": 157.48,
+    "equity": 1.0
+  },
+  "SXI": {
+    "shares": 0.00729,
+    "avg_price": 137.17,
+    "equity": 1.0
+  },
+  "AFRM": {
+    "shares": 0.03156,
+    "avg_price": 31.69,
+    "equity": 1.0
+  },
+  "MPWR": {
+    "shares": 0.00217,
+    "avg_price": 460.83,
+    "equity": 1.0
+  },
+  "TM": {
+    "shares": 0.00635,
+    "avg_price": 157.48,
+    "equity": 1.0
+  },
+  "PLTR": {
+    "shares": 0.00061,
+    "avg_price": 81.97,
+    "equity": 0.05
+  },
+  "LIN": {
+    "shares": 0.0022,
+    "avg_price": 454.55,
+    "equity": 1.0
+  },
+  "APD": {
+    "shares": 0.00757,
+    "avg_price": 264.2,
+    "equity": 2.0
+  },
+  "CMI": {
+    "shares": 0.00355,
+    "avg_price": 281.69,
+    "equity": 1.0
+  },
+  "GUSH": {
+    "shares": 0.0573,
+    "avg_price": 17.45,
+    "equity": 1.0
+  },
+  "UPRO": {
+    "shares": 0.03582,
+    "avg_price": 55.83,
+    "equity": 2.0
+  },
+  "TQQQ": {
+    "shares": 0.09346,
+    "avg_price": 21.4,
+    "equity": 2.0
+  },
+  "MTDR": {
+    "shares": 0.02577,
+    "avg_price": 38.8,
+    "equity": 1.0
+  },
+  "SGML": {
+    "shares": 0.13057,
+    "avg_price": 7.66,
+    "equity": 1.0
+  },
+  "ALB": {
+    "shares": 0.01708,
+    "avg_price": 58.55,
+    "equity": 1.0
+  },
+  "MU": {
+    "shares": 0.03047,
+    "avg_price": 65.64,
+    "equity": 2.0
+  },
+  "TNXP": {
+    "shares": 0.06414,
+    "avg_price": 15.59,
+    "equity": 1.0
+  },
+  "AUR": {
+    "shares": 0.17839,
+    "avg_price": 5.61,
+    "equity": 1.0
+  },
+  "APO": {
+    "shares": 0.00923,
+    "avg_price": 108.34,
+    "equity": 1.0
+  },
+  "ROM": {
+    "shares": 0.04849,
+    "avg_price": 41.25,
+    "equity": 2.0
+  },
+  "INTC": {
+    "shares": 0.38557,
+    "avg_price": 46.68,
+    "equity": 18.0
+  },
+  "UCO": {
+    "shares": 0.09335,
+    "avg_price": 21.42,
+    "equity": 2.0
+  },
+  "BNGO": {
+    "shares": 1.0,
+    "avg_price": 3.08,
+    "equity": 3.08
+  },
+  "ESYN": {
+    "shares": 1.0,
+    "avg_price": 0.95,
+    "equity": 0.95
+  },
+  "MSTR": {
+    "shares": 0.00373,
+    "avg_price": 268.1,
+    "equity": 1.0
+  },
+  "XPEV": {
+    "shares": 0.05596,
+    "avg_price": 17.87,
+    "equity": 1.0
+  },
+  "LOVE": {
+    "shares": 0.07246,
+    "avg_price": 13.8,
+    "equity": 1.0
+  },
+  "LI": {
+    "shares": 0.04589,
+    "avg_price": 21.79,
+    "equity": 1.0
+  },
+  "CQQQ": {
+    "shares": 0.02592,
+    "avg_price": 38.58,
+    "equity": 1.0
+  },
+  "VNDA": {
+    "shares": 0.2532,
+    "avg_price": 3.95,
+    "equity": 1.0
+  },
+  "LIT": {
+    "shares": 0.02977,
+    "avg_price": 33.59,
+    "equity": 1.0
+  },
+  "COIN": {
+    "shares": 0.09442,
+    "avg_price": 158.86,
+    "equity": 15.0
+  },
+  "EWT": {
+    "shares": 0.0235,
+    "avg_price": 42.55,
+    "equity": 1.0
+  },
+  "MDB": {
+    "shares": 0.0066,
+    "avg_price": 151.52,
+    "equity": 1.0
+  },
+  "SNAP": {
+    "shares": 1.87734,
+    "avg_price": 7.99,
+    "equity": 15.0
+  },
+  "SRPT": {
+    "shares": 0.03757,
+    "avg_price": 53.23,
+    "equity": 2.0
+  },
+  "AAPL": {
+    "shares": 0.02722,
+    "avg_price": 183.69,
+    "equity": 5.0
+  },
+  "D": {
+    "shares": 0.0196,
+    "avg_price": 51.02,
+    "equity": 1.0
+  },
+  "TSM": {
+    "shares": 0.00687,
+    "avg_price": 145.56,
+    "equity": 1.0
+  },
+  "REXR": {
+    "shares": 0.02969,
+    "avg_price": 33.68,
+    "equity": 1.0
+  },
+  "UMC": {
+    "shares": 0.16182,
+    "avg_price": 6.18,
+    "equity": 1.0
+  },
+  "BNTX": {
+    "shares": 0.01153,
+    "avg_price": 86.73,
+    "equity": 1.0
+  },
+  "ASX": {
+    "shares": 0.13114,
+    "avg_price": 7.63,
+    "equity": 1.0
+  },
+  "BCS": {
+    "shares": 0.0774,
+    "avg_price": 12.92,
+    "equity": 1.0
+  },
+  "MDGL": {
+    "shares": 0.00319,
+    "avg_price": 313.48,
+    "equity": 1.0
+  },
+  "EXPE": {
+    "shares": 0.01417,
+    "avg_price": 141.14,
+    "equity": 2.0
+  },
+  "RNG": {
+    "shares": 0.04488,
+    "avg_price": 22.28,
+    "equity": 1.0
+  },
+  "BLDR": {
+    "shares": 0.00811,
+    "avg_price": 123.3,
+    "equity": 1.0
+  },
+  "BLOK": {
+    "shares": 0.02924,
+    "avg_price": 34.2,
+    "equity": 1.0
+  },
+  "CCI": {
+    "shares": 0.01006,
+    "avg_price": 99.4,
+    "equity": 1.0
+  },
+  "ABBV": {
+    "shares": 0.00541,
+    "avg_price": 184.84,
+    "equity": 1.0
+  },
+  "JNJ": {
+    "shares": 0.00666,
+    "avg_price": 150.15,
+    "equity": 1.0
+  },
+  "WOR": {
+    "shares": 0.02141,
+    "avg_price": 46.71,
+    "equity": 1.0
+  },
+  "IBM": {
+    "shares": 0.00887,
+    "avg_price": 225.48,
+    "equity": 2.0
+  },
+  "LULU": {
+    "shares": 0.00381,
+    "avg_price": 262.47,
+    "equity": 1.0
+  },
+  "METV": {
+    "shares": 0.08281,
+    "avg_price": 12.08,
+    "equity": 1.0
+  },
+  "DOCN": {
+    "shares": 0.03453,
+    "avg_price": 28.96,
+    "equity": 1.0
+  },
+  "SNOW": {
+    "shares": 0.00765,
+    "avg_price": 130.72,
+    "equity": 1.0
+  },
+  "SMMT": {
+    "shares": 0.05793,
+    "avg_price": 17.26,
+    "equity": 1.0
+  },
+  "PINS": {
+    "shares": 0.03934,
+    "avg_price": 25.42,
+    "equity": 1.0
+  },
+  "SQM": {
+    "shares": 0.05537,
+    "avg_price": 36.12,
+    "equity": 2.0
+  },
+  "TGT": {
+    "shares": 0.05233,
+    "avg_price": 95.55,
+    "equity": 5.0
+  },
+  "XT": {
+    "shares": 0.01955,
+    "avg_price": 51.15,
+    "equity": 1.0
+  },
+  "ARKG": {
+    "shares": 0.05261,
+    "avg_price": 19.01,
+    "equity": 1.0
+  },
+  "MA": {
+    "shares": 0.00206,
+    "avg_price": 485.44,
+    "equity": 1.0
+  },
+  "SCHD": {
+    "shares": 0.04011,
+    "avg_price": 24.93,
+    "equity": 1.0
+  },
+  "FRSH": {
+    "shares": 0.08117,
+    "avg_price": 12.32,
+    "equity": 1.0
+  },
+  "ICLN": {
+    "shares": 0.0922,
+    "avg_price": 10.85,
+    "equity": 1.0
+  },
+  "DAR": {
+    "shares": 0.03451,
+    "avg_price": 28.98,
+    "equity": 1.0
+  },
+  "FDLO": {
+    "shares": 0.0181,
+    "avg_price": 55.25,
+    "equity": 1.0
+  },
+  "TAN": {
+    "shares": 0.03582,
+    "avg_price": 27.92,
+    "equity": 1.0
+  },
+  "LVHI": {
+    "shares": 0.03441,
+    "avg_price": 29.06,
+    "equity": 1.0
+  },
+  "NIO": {
+    "shares": 0.29948,
+    "avg_price": 3.34,
+    "equity": 1.0
+  },
+  "EELV": {
+    "shares": 0.04422,
+    "avg_price": 22.61,
+    "equity": 1.0
+  },
+  "ADBE": {
+    "shares": 0.00294,
+    "avg_price": 340.14,
+    "equity": 1.0
+  },
+  "SONY": {
+    "shares": 0.04717,
+    "avg_price": 21.2,
+    "equity": 1.0
+  },
+  "DBE": {
+    "shares": 0.0578,
+    "avg_price": 16.61,
+    "equity": 0.96
+  },
+  "NOBL": {
+    "shares": 0.02168,
+    "avg_price": 46.13,
+    "equity": 1.0
+  },
+  "HUSV": {
+    "shares": 0.02724,
+    "avg_price": 36.71,
+    "equity": 1.0
+  },
+  "SPHD": {
+    "shares": 0.02218,
+    "avg_price": 45.09,
+    "equity": 1.0
+  },
+  "BLNK": {
+    "shares": 1.23449,
+    "avg_price": 0.81,
+    "equity": 1.0
+  },
+  "SPLV": {
+    "shares": 0.01459,
+    "avg_price": 68.54,
+    "equity": 1.0
+  },
+  "UNH": {
+    "shares": 0.00194,
+    "avg_price": 515.46,
+    "equity": 1.0
+  },
+  "LGLV": {
+    "shares": 0.00629,
+    "avg_price": 158.98,
+    "equity": 1.0
+  },
+  "PBD": {
+    "shares": 0.10453,
+    "avg_price": 9.57,
+    "equity": 1.0
+  },
+  "DVOL": {
+    "shares": 0.03111,
+    "avg_price": 32.14,
+    "equity": 1.0
+  },
+  "XMLV": {
+    "shares": 0.01772,
+    "avg_price": 56.43,
+    "equity": 1.0
+  },
+  "CDC": {
+    "shares": 0.0169,
+    "avg_price": 59.17,
+    "equity": 1.0
+  },
+  "BLK": {
+    "shares": 0.00123,
+    "avg_price": 804.88,
+    "equity": 0.99
+  },
+  "BCD": {
+    "shares": 0.03155,
+    "avg_price": 30.74,
+    "equity": 0.97
+  },
+  "IVE": {
+    "shares": 0.0059,
+    "avg_price": 169.49,
+    "equity": 1.0
+  },
+  "IOO": {
+    "shares": 0.01173,
+    "avg_price": 85.25,
+    "equity": 1.0
+  },
+  "MRK": {
+    "shares": 0.01245,
+    "avg_price": 80.32,
+    "equity": 1.0
+  },
+  "ENPH": {
+    "shares": 0.03583,
+    "avg_price": 55.82,
+    "equity": 2.0
+  },
+  "CMDY": {
+    "shares": 0.02074,
+    "avg_price": 48.22,
+    "equity": 1.0
+  },
+  "RSP": {
+    "shares": 0.00649,
+    "avg_price": 154.08,
+    "equity": 1.0
+  },
+  "BCI": {
+    "shares": 0.05025,
+    "avg_price": 19.5,
+    "equity": 0.98
+  },
+  "BND": {
+    "shares": 0.01362,
+    "avg_price": 73.42,
+    "equity": 1.0
+  },
+  "VOO": {
+    "shares": 0.01099,
+    "avg_price": 454.96,
+    "equity": 5.0
+  },
+  "PANW": {
+    "shares": 0.013854,
+    "avg_price": 158.08,
+    "equity": 2.19
+  },
+  "ESTC": {
+    "shares": 0.01347,
+    "avg_price": 74.24,
+    "equity": 1.0
+  },
+  "SMLV": {
+    "shares": 0.00897,
+    "avg_price": 111.48,
+    "equity": 1.0
+  },
+  "NTR": {
+    "shares": 0.02139,
+    "avg_price": 46.75,
+    "equity": 1.0
+  },
+  "UNG": {
+    "shares": 0.05044,
+    "avg_price": 19.83,
+    "equity": 1.0
+  },
+  "V": {
+    "shares": 0.00325,
+    "avg_price": 307.69,
+    "equity": 1.0
+  },
+  "NOC": {
+    "shares": 0.00208,
+    "avg_price": 480.77,
+    "equity": 1.0
+  },
+  "WDAY": {
+    "shares": 0.00468,
+    "avg_price": 213.68,
+    "equity": 1.0
+  },
+  "AZTA": {
+    "shares": 0.03528,
+    "avg_price": 28.34,
+    "equity": 1.0
+  },
+  "SCHX": {
+    "shares": 0.05117,
+    "avg_price": 19.54,
+    "equity": 1.0
+  },
+  "VTI": {
+    "shares": 0.00411,
+    "avg_price": 243.31,
+    "equity": 1.0
+  },
+  "LAR": {
+    "shares": 0.54077,
+    "avg_price": 1.85,
+    "equity": 1.0
+  },
+  "IWB": {
+    "shares": 0.01476,
+    "avg_price": 271.0,
+    "equity": 4.0
+  },
+  "MSFT": {
+    "shares": 0.01415,
+    "avg_price": 353.36,
+    "equity": 5.0
+  },
+  "SPY": {
+    "shares": 0.00202,
+    "avg_price": 495.05,
+    "equity": 1.0
+  },
+  "S": {
+    "shares": 0.06006,
+    "avg_price": 16.65,
+    "equity": 1.0
+  },
+  "ONEQ": {
+    "shares": 0.01659,
+    "avg_price": 60.28,
+    "equity": 1.0
+  },
+  "COMB": {
+    "shares": 0.04977,
+    "avg_price": 20.09,
+    "equity": 1.0
+  },
+  "ZS": {
+    "shares": 0.0056,
+    "avg_price": 178.57,
+    "equity": 1.0
+  },
+  "XYZ": {
+    "shares": 0.01998,
+    "avg_price": 50.05,
+    "equity": 1.0
+  },
+  "XNTK": {
+    "shares": 0.00599,
+    "avg_price": 166.94,
+    "equity": 1.0
+  },
+  "XLK": {
+    "shares": 0.01108,
+    "avg_price": 90.25,
+    "equity": 1.0
+  },
+  "WOOF": {
+    "shares": 0.3565,
+    "avg_price": 2.81,
+    "equity": 1.0
+  },
+  "WMT": {
+    "shares": 0.01197,
+    "avg_price": 83.54,
+    "equity": 1.0
+  },
+  "WFC": {
+    "shares": 0.01636,
+    "avg_price": 61.12,
+    "equity": 1.0
+  },
+  "VUG": {
+    "shares": 0.01806,
+    "avg_price": 55.37,
+    "equity": 1.0
+  },
+  "VIOG": {
+    "shares": 0.01046,
+    "avg_price": 95.6,
+    "equity": 1.0
+  },
+  "VGT": {
+    "shares": 0.0168,
+    "avg_price": 59.52,
+    "equity": 1.0
+  },
+  "TWLO": {
+    "shares": 0.0121,
+    "avg_price": 82.64,
+    "equity": 1.0
+  },
+  "TTWO": {
+    "shares": 0.00512,
+    "avg_price": 195.31,
+    "equity": 1.0
+  },
+  "TMUS": {
+    "shares": 0.034167,
+    "avg_price": 175.61,
+    "equity": 6.0
+  },
+  "TEAM": {
+    "shares": 0.00537,
+    "avg_price": 186.22,
+    "equity": 1.0
+  },
+  "TDIV": {
+    "shares": 0.01529,
+    "avg_price": 65.4,
+    "equity": 1.0
+  },
+  "STX": {
+    "shares": 0.017923,
+    "avg_price": 167.38,
+    "equity": 3.0
+  },
+  "SPWH": {
+    "shares": 0.60606,
+    "avg_price": 1.65,
+    "equity": 1.0
+  },
+  "SMH": {
+    "shares": 0.00542,
+    "avg_price": 184.5,
+    "equity": 1.0
+  },
+  "SMCI": {
+    "shares": 0.03071,
+    "avg_price": 32.56,
+    "equity": 1.0
+  },
+  "SHOP": {
+    "shares": 0.01274,
+    "avg_price": 78.49,
+    "equity": 1.0
+  },
+  "RYTM": {
+    "shares": 0.01884,
+    "avg_price": 53.08,
+    "equity": 1.0
+  },
+  "ROAD": {
+    "shares": 0.01426,
+    "avg_price": 70.13,
+    "equity": 1.0
+  },
+  "RIVN": {
+    "shares": 0.08889,
+    "avg_price": 11.25,
+    "equity": 1.0
+  },
+  "RIOT": {
+    "shares": 0.13911,
+    "avg_price": 7.19,
+    "equity": 1.0
+  },
+  "REMX": {
+    "shares": 0.02903,
+    "avg_price": 34.45,
+    "equity": 1.0
+  },
+  "QTEC": {
+    "shares": 0.00653,
+    "avg_price": 153.14,
+    "equity": 1.0
+  },
+  "QQQM": {
+    "shares": 0.00574,
+    "avg_price": 174.22,
+    "equity": 1.0
+  },
+  "QQQE": {
+    "shares": 0.01272,
+    "avg_price": 78.62,
+    "equity": 1.0
+  },
+  "QQQ": {
+    "shares": 0.00236,
+    "avg_price": 423.73,
+    "equity": 1.0
+  },
+  "QQEW": {
+    "shares": 0.00917,
+    "avg_price": 109.05,
+    "equity": 1.0
+  },
+  "QCOM": {
+    "shares": 0.00776,
+    "avg_price": 128.87,
+    "equity": 1.0
+  },
+  "QCLN": {
+    "shares": 0.03843,
+    "avg_price": 26.02,
+    "equity": 1.0
+  },
+  "PLUG": {
+    "shares": 0.82054,
+    "avg_price": 1.22,
+    "equity": 1.0
+  },
+  "ON": {
+    "shares": 0.14409,
+    "avg_price": 34.7,
+    "equity": 5.0
+  },
+  "NVO": {
+    "shares": 0.01588,
+    "avg_price": 62.97,
+    "equity": 1.0
+  },
+  "NVCR": {
+    "shares": 0.06064,
+    "avg_price": 16.49,
+    "equity": 1.0
+  },
+  "NFLX": {
+    "shares": 0.0115,
+    "avg_price": 86.96,
+    "equity": 1.0
+  },
+  "NET": {
+    "shares": 0.01028,
+    "avg_price": 97.28,
+    "equity": 1.0
+  },
+  "MNDY": {
+    "shares": 0.00453,
+    "avg_price": 220.75,
+    "equity": 1.0
+  },
+  "MDT": {
+    "shares": 0.01205,
+    "avg_price": 82.99,
+    "equity": 1.0
+  },
+  "MCD": {
+    "shares": 0.00334,
+    "avg_price": 299.4,
+    "equity": 1.0
+  },
+  "MARA": {
+    "shares": 0.08881,
+    "avg_price": 11.26,
+    "equity": 1.0
+  },
+  "LRCX": {
+    "shares": 0.01615,
+    "avg_price": 61.92,
+    "equity": 1.0
+  },
+  "LITE": {
+    "shares": 0.01916,
+    "avg_price": 52.19,
+    "equity": 1.0
+  },
+  "LAC": {
+    "shares": 0.3861,
+    "avg_price": 2.59,
+    "equity": 1.0
+  },
+  "JPM": {
+    "shares": 0.00467,
+    "avg_price": 214.13,
+    "equity": 1.0
+  },
+  "IYW": {
+    "shares": 0.00805,
+    "avg_price": 124.22,
+    "equity": 1.0
+  },
+  "IPAY": {
+    "shares": 0.02118,
+    "avg_price": 47.21,
+    "equity": 1.0
+  },
+  "HUT": {
+    "shares": 0.08628,
+    "avg_price": 11.59,
+    "equity": 1.0
+  },
+  "HSY": {
+    "shares": 0.00616,
+    "avg_price": 162.34,
+    "equity": 1.0
+  },
+  "GTLB": {
+    "shares": 0.02345,
+    "avg_price": 42.64,
+    "equity": 1.0
+  },
+  "GOOGL": {
+    "shares": 0.051382,
+    "avg_price": 194.62,
+    "equity": 10.0
+  },
+  "GOOG": {
+    "shares": 0.00678,
+    "avg_price": 147.49,
+    "equity": 1.0
+  },
+  "GME": {
+    "shares": 0.04307,
+    "avg_price": 23.22,
+    "equity": 1.0
+  },
+  "GH": {
+    "shares": 0.02447,
+    "avg_price": 40.87,
+    "equity": 1.0
+  },
+  "FXL": {
+    "shares": 0.00855,
+    "avg_price": 116.96,
+    "equity": 1.0
+  },
+  "FVRR": {
+    "shares": 0.04243,
+    "avg_price": 23.57,
+    "equity": 1.0
+  },
+  "FTEC": {
+    "shares": 0.00707,
+    "avg_price": 141.44,
+    "equity": 1.0
+  },
+  "FORM": {
+    "shares": 0.04173,
+    "avg_price": 23.96,
+    "equity": 1.0
+  },
+  "FLG": {
+    "shares": 0.09541,
+    "avg_price": 10.48,
+    "equity": 1.0
+  },
+  "ETN": {
+    "shares": 0.00406,
+    "avg_price": 246.31,
+    "equity": 1.0
+  },
+  "ESPO": {
+    "shares": 0.01248,
+    "avg_price": 80.13,
+    "equity": 1.0
+  },
+  "DXCM": {
+    "shares": 0.01653,
+    "avg_price": 60.5,
+    "equity": 1.0
+  },
+  "DUOL": {
+    "shares": 0.00343,
+    "avg_price": 291.55,
+    "equity": 1.0
+  },
+  "DQ": {
+    "shares": 0.06373,
+    "avg_price": 15.69,
+    "equity": 1.0
+  },
+  "DIS": {
+    "shares": 0.01204,
+    "avg_price": 83.06,
+    "equity": 1.0
+  },
+  "DDOG": {
+    "shares": 0.01144,
+    "avg_price": 87.41,
+    "equity": 1.0
+  },
+  "DBMF": {
+    "shares": 0.04063,
+    "avg_price": 24.61,
+    "equity": 1.0
+  },
+  "DASH": {
+    "shares": 0.00602,
+    "avg_price": 166.11,
+    "equity": 1.0
+  },
+  "CSCO": {
+    "shares": 0.0185,
+    "avg_price": 54.05,
+    "equity": 1.0
+  },
+  "CRWD": {
+    "shares": 0.0124,
+    "avg_price": 80.65,
+    "equity": 1.0
+  },
+  "CME": {
+    "shares": 0.00394,
+    "avg_price": 253.81,
+    "equity": 1.0
+  },
+  "CLSK": {
+    "shares": 0.13386,
+    "avg_price": 7.47,
+    "equity": 1.0
+  },
+  "CHTR": {
+    "shares": 0.260379,
+    "avg_price": 122.9,
+    "equity": 32.0
+  },
+  "CHGG": {
+    "shares": 1.0,
+    "avg_price": 0.48,
+    "equity": 0.48
+  },
+  "CDNS": {
+    "shares": 0.00427,
+    "avg_price": 234.19,
+    "equity": 1.0
+  },
+  "BITO": {
+    "shares": 0.05851,
+    "avg_price": 17.09,
+    "equity": 1.0
+  },
+  "BILL": {
+    "shares": 0.0254,
+    "avg_price": 39.37,
+    "equity": 1.0
+  },
+  "BEPC": {
+    "shares": 0.03878,
+    "avg_price": 25.79,
+    "equity": 1.0
+  },
+  "ARKK": {
+    "shares": 0.0241,
+    "avg_price": 41.49,
+    "equity": 1.0
+  },
+  "ARES": {
+    "shares": 0.00824,
+    "avg_price": 117.72,
+    "equity": 0.97
+  },
+  "AOSL": {
+    "shares": 0.43057,
+    "avg_price": 18.58,
+    "equity": 8.0
+  },
+  "AMZN": {
+    "shares": 0.02902,
+    "avg_price": 172.29,
+    "equity": 5.0
+  },
+  "AMC": {
+    "shares": 4.30122,
+    "avg_price": 2.79,
+    "equity": 12.0
+  },
+  "AI": {
+    "shares": 0.05288,
+    "avg_price": 18.91,
+    "equity": 1.0
+  },
+  "ADM": {
+    "shares": 0.02294,
+    "avg_price": 43.59,
+    "equity": 1.0
+  },
+  "XSLV": {
+    "shares": 0.02354,
+    "avg_price": 42.48,
+    "equity": 1.0
+  },
+  "VSMV": {
+    "shares": 0.02273,
+    "avg_price": 43.99,
+    "equity": 1.0
+  },
+  "UBER": {
+    "shares": 0.01569,
+    "avg_price": 63.73,
+    "equity": 1.0
+  },
+  "SDCI": {
+    "shares": 0.05078,
+    "avg_price": 19.69,
+    "equity": 1.0
+  },
+  "SBUX": {
+    "shares": 0.01277,
+    "avg_price": 78.31,
+    "equity": 1.0
+  },
+  "QLV": {
+    "shares": 0.01662,
+    "avg_price": 60.17,
+    "equity": 1.0
+  },
+  "OWL": {
+    "shares": 0.06349,
+    "avg_price": 15.28,
+    "equity": 0.97
+  },
+  "ORCL": {
+    "shares": 0.03997,
+    "avg_price": 125.09,
+    "equity": 5.0
+  },
+  "ONEV": {
+    "shares": 0.00865,
+    "avg_price": 115.61,
+    "equity": 1.0
+  },
+  "NTES": {
+    "shares": 0.01099,
+    "avg_price": 90.99,
+    "equity": 1.0
+  },
+  "NKE": {
+    "shares": 0.710602,
+    "avg_price": 45.03,
+    "equity": 32.0
+  },
+  "MRNA": {
+    "shares": 0.04004,
+    "avg_price": 24.98,
+    "equity": 1.0
+  },
+  "META": {
+    "shares": 0.088795,
+    "avg_price": 549.81,
+    "equity": 48.82
+  },
+  "MDU": {
+    "shares": 0.06381,
+    "avg_price": 15.67,
+    "equity": 1.0
+  },
+  "LYG": {
+    "shares": 0.30304,
+    "avg_price": 3.3,
+    "equity": 1.0
+  },
+  "LVHD": {
+    "shares": 0.02656,
+    "avg_price": 37.65,
+    "equity": 1.0
+  },
+  "LMT": {
+    "shares": 0.00234,
+    "avg_price": 427.35,
+    "equity": 1.0
+  },
+  "KOLD": {
+    "shares": 0.0445,
+    "avg_price": 22.47,
+    "equity": 1.0
+  },
+  "KLAC": {
+    "shares": 0.0171,
+    "avg_price": 58.48,
+    "equity": 1.0
+  },
+  "INTU": {
+    "shares": 0.037937,
+    "avg_price": 289.95,
+    "equity": 11.0
+  },
+  "HAL": {
+    "shares": 0.05123,
+    "avg_price": 19.52,
+    "equity": 1.0
+  },
+  "GWW": {
+    "shares": 0.00108,
+    "avg_price": 925.93,
+    "equity": 1.0
+  },
+  "GEV": {
+    "shares": 0.00364,
+    "avg_price": 274.73,
+    "equity": 1.0
+  },
+  "GE": {
+    "shares": 0.00608,
+    "avg_price": 164.47,
+    "equity": 1.0
+  },
+  "ECG": {
+    "shares": 0.03043,
+    "avg_price": 32.86,
+    "equity": 1.0
+  },
+  "DWTX": {
+    "shares": 1.0,
+    "avg_price": 4.02,
+    "equity": 4.02
+  },
+  "DOCU": {
+    "shares": 0.0142,
+    "avg_price": 70.42,
+    "equity": 1.0
+  },
+  "DIV": {
+    "shares": 0.05927,
+    "avg_price": 16.87,
+    "equity": 1.0
+  },
+  "DECK": {
+    "shares": 0.00978,
+    "avg_price": 102.25,
+    "equity": 1.0
+  },
+  "COST": {
+    "shares": 0.00111,
+    "avg_price": 900.9,
+    "equity": 1.0
+  },
+  "COPX": {
+    "shares": 0.0313,
+    "avg_price": 31.95,
+    "equity": 1.0
+  },
+  "COM": {
+    "shares": 0.03597,
+    "avg_price": 27.8,
+    "equity": 1.0
+  },
+  "BP": {
+    "shares": 0.03741,
+    "avg_price": 26.73,
+    "equity": 1.0
+  },
+  "ASML": {
+    "shares": 0.00166,
+    "avg_price": 602.41,
+    "equity": 1.0
+  },
+  "ARRY": {
+    "shares": 0.23866,
+    "avg_price": 4.19,
+    "equity": 1.0
+  },
+  "APA": {
+    "shares": 0.06807,
+    "avg_price": 14.69,
+    "equity": 1.0
+  },
+  "ACB": {
+    "shares": 0.25136,
+    "avg_price": 3.98,
+    "equity": 1.0
+  },
+  "ABNB": {
+    "shares": 0.00959,
+    "avg_price": 104.28,
+    "equity": 1.0
+  },
+  "BRK.B": {
+    "shares": 0.00192,
+    "avg_price": 520.83,
+    "equity": 1.0
+  },
+  "DUO": {
+    "shares": 0.0625,
+    "avg_price": 3.68,
+    "equity": 0.23
+  },
+  "RAL": {
+    "shares": 0.005167,
+    "avg_price": 48.38,
+    "equity": 0.25
+  },
+  "GLIBK": {
+    "shares": 0.002586,
+    "avg_price": 34.8,
+    "equity": 0.09
+  },
+  "ECHO": {
+    "shares": 0.016409,
+    "avg_price": 60.94,
+    "equity": 1.0
+  },
+  "ELVR": {
+    "shares": 0.062291,
+    "avg_price": 23.28,
+    "equity": 1.45
+  },
+  "KLAR": {
+    "shares": 1.0,
+    "avg_price": 40.0,
+    "equity": 40.0
+  },
+  "PTRN": {
+    "shares": 1.0,
+    "avg_price": 14.0,
+    "equity": 14.0
+  },
+  "SQQQ": {
+    "shares": 0.003922,
+    "avg_price": 254.97,
+    "equity": 1.0
+  },
+  "WEAT": {
+    "shares": 0.042826,
+    "avg_price": 23.35,
+    "equity": 1.0
+  },
+  "TLRY": {
+    "shares": 0.1,
+    "avg_price": 5.8,
+    "equity": 0.58
+  },
+  "CYBR^": {
+    "shares": 0.00326,
+    "avg_price": 0.0,
+    "equity": 0.0
+  },
+  "BOIL": {
+    "shares": 0.006915,
+    "avg_price": 144.61,
+    "equity": 1.0
+  },
+  "XOM": {
+    "shares": 0.00971,
+    "avg_price": 102.99,
+    "equity": 1.0
+  },
+  "SOXS": {
+    "shares": 0.000119,
+    "avg_price": 8403.36,
+    "equity": 1.0
+  },
+  "LHX": {
+    "shares": 0.101079,
+    "avg_price": 247.33,
+    "equity": 25.0
+  },
+  "APP": {
+    "shares": 0.086909,
+    "avg_price": 287.66,
+    "equity": 25.0
+  },
+  "SERV": {
+    "shares": 3.38983,
+    "avg_price": 4.43,
+    "equity": 15.02
+  },
+  "NNE": {
+    "shares": 0.697269,
+    "avg_price": 17.21,
+    "equity": 12.0
+  },
+  "RCAT": {
+    "shares": 1.326455,
+    "avg_price": 6.79,
+    "equity": 9.01
+  },
+  "SOFI": {
+    "shares": 0.295926,
+    "avg_price": 16.9,
+    "equity": 5.0
+  },
+  "UEC": {
+    "shares": 0.29985,
+    "avg_price": 10.01,
+    "equity": 3.0
+  },
+  "BN": {
+    "shares": 0.406814,
+    "avg_price": 36.87,
+    "equity": 15.0
+  },
+  "VST": {
+    "shares": 0.136169,
+    "avg_price": 124.84,
+    "equity": 17.0
+  },
+  "CEG": {
+    "shares": 0.003796,
+    "avg_price": 263.44,
+    "equity": 1.0
+  },
+  "HROW": {
+    "shares": 0.029494,
+    "avg_price": 33.91,
+    "equity": 1.0
+  },
+  "LUNR": {
+    "shares": 0.649139,
+    "avg_price": 15.41,
+    "equity": 10.0
+  },
+  "FSLR": {
+    "shares": 0.082481,
+    "avg_price": 181.86,
+    "equity": 15.0
+  },
+  "BILI": {
+    "shares": 0.33512,
+    "avg_price": 14.92,
+    "equity": 5.0
+  },
+  "BROS": {
+    "shares": 0.260213,
+    "avg_price": 38.43,
+    "equity": 10.0
+  },
+  "BKNG": {
+    "shares": 0.094357,
+    "avg_price": 158.97,
+    "equity": 15.0
+  },
+  "BWXT": {
+    "shares": 0.072733,
+    "avg_price": 137.49,
+    "equity": 10.0
+  },
+  "AAOI": {
+    "shares": 0.374251,
+    "avg_price": 66.8,
+    "equity": 25.0
+  },
+  "AEHR": {
+    "shares": 0.22422,
+    "avg_price": 52.72,
+    "equity": 11.82
+  },
+  "NBIS": {
+    "shares": 0.032966,
+    "avg_price": 151.67,
+    "equity": 5.0
+  },
+  "TER": {
+    "shares": 0.018641,
+    "avg_price": 268.23,
+    "equity": 5.0
+  },
+  "COHR": {
+    "shares": 0.120989,
+    "avg_price": 206.63,
+    "equity": 25.0
+  },
+  "SKHY": {
+    "shares": 0.134902,
+    "avg_price": 148.26,
+    "equity": 20.0
+  },
+  "RDDT": {
+    "shares": 0.275679,
+    "avg_price": 90.69,
+    "equity": 25.0
+  },
+  "FN": {
+    "shares": 0.093507,
+    "avg_price": 320.83,
+    "equity": 30.0
+  },
+  "PL": {
+    "shares": 0.744601,
+    "avg_price": 13.43,
+    "equity": 10.0
+  },
+  "IREN": {
+    "shares": 0.42649,
+    "avg_price": 23.45,
+    "equity": 10.0
+  },
+  "RKLB": {
+    "shares": 0.092047,
+    "avg_price": 54.32,
+    "equity": 5.0
+  },
+  "SNDK": {
+    "shares": 0.008761,
+    "avg_price": 1141.42,
+    "equity": 10.0
+  },
+  "ALAB": {
+    "shares": 0.007921,
+    "avg_price": 252.49,
+    "equity": 2.0
+  },
+  "CRWV": {
+    "shares": 0.463439,
+    "avg_price": 53.94,
+    "equity": 25.0
+  },
+  "CORZ": {
+    "shares": 0.465657,
+    "avg_price": 12.89,
+    "equity": 6.0
+  },
+  "QBTS": {
+    "shares": 0.482858,
+    "avg_price": 10.36,
+    "equity": 5.0
+  },
+  "CBRS": {
+    "shares": 0.046827,
+    "avg_price": 106.78,
+    "equity": 5.0
+  },
+  "AGLT": {
+    "shares": 1.218026,
+    "avg_price": 8.21,
+    "equity": 10.0
+  }
+}
