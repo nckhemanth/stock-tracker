@@ -26,26 +26,24 @@ def main(force: bool = False):
         return
 
     # 1. Pull Robinhood holdings
-    print("\n[1/4] Fetching Robinhood holdings...")
+    print("\n[1/6] Fetching Robinhood holdings...")
     holdings = get_robinhood_holdings()
     print(f"  Found {len(holdings)} positions")
 
-    # 2. Process all stocks
-    print("\n[2/4] Processing stocks...")
+    # 2-5. Process all stocks (universe, price data, fundamentals, scoring)
     stocks = process_all_stocks(holdings=holdings)
-    print(f"  Processed {len(stocks)} stocks")
 
     if not stocks:
         print("ERROR: No stocks processed. Aborting.")
         sys.exit(1)
 
-    # 3. Render HTML
-    print("\n[3/4] Rendering HTML...")
+    # 6. Render HTML
+    print(f"\n[5/5] Rendering HTML...")
     output = render_html(stocks)
     print(f"  Written to {output}")
 
-    # 4. Send email
-    print("\n[4/4] Sending email notification...")
+    # Send email
+    print("\nSending email notification...")
     send_refresh_email(len(stocks), stocks[:10])
 
     elapsed = time.time() - start

@@ -1,10 +1,12 @@
 """
 Main data engine. Fetches market data, computes everything, produces the table.
+Optimized for 1000+ stocks with batch downloads and fundamentals caching.
 """
 
 import json
 import math
 import sqlite3
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
@@ -18,9 +20,12 @@ from .config import (
 from .intuition import (
     get_daily_closes, compute_intuition_point, compute_scores,
 )
+from .universe import get_universe
 
 
 DB_PATH = DATA_DIR / "tracker.db"
+FUNDAMENTALS_CACHE = DATA_DIR / "fundamentals_cache.json"
+FUNDAMENTALS_STALE_HOURS = 8  # re-fetch fundamentals every 8 hours
 
 
 def init_db():
@@ -65,100 +70,48 @@ def get_override(ticker: str) -> Optional[float]:
     return row[0] if row else None
 
 
-def get_stock_universe() -> list[str]:
-    """Get the full stock universe: seed list + any auto-discovered tickers."""
-    tickers = list(SEED_TICKERS)
-    # Load any additional tickers from discovery
-    discovery_file = DATA_DIR / "discovered_tickers.json"
-    if discovery_file.exists():
-        with open(discovery_file) as f:
-            extra = json.load(f)
-            for t in extra:
-                if t not in tickers:
-                    tickers.append(t)
-    return tickers
+# ── Fundamentals caching ──────────────────────────────────────────────────
 
-
-def discover_trending() -> list[str]:
-    """Auto-discover trending stocks from Yahoo Finance."""
-    trending = []
+def _load_fundamentals_cache() -> dict:
+    """Load cached fundamentals."""
+    if not FUNDAMENTALS_CACHE.exists():
+        return {}
     try:
-        # Get trending tickers from yfinance
-        gainers = yf.Tickers("SPY QQQ").tickers  # placeholder
-        # Use Yahoo Finance screeners for day gainers and most active
-        for screen_name in ["day_gainers", "most_actives"]:
-            try:
-                screener = yf.Screen(screen_name)
-                if hasattr(screener, 'symbols'):
-                    trending.extend(screener.symbols[:20])
-            except Exception:
-                pass
+        with open(FUNDAMENTALS_CACHE) as f:
+            return json.load(f)
     except Exception:
-        pass
+        return {}
 
-    # Filter to US stocks with reasonable market cap
-    filtered = []
-    for t in set(trending):
-        if t not in SEED_TICKERS and len(t) <= 5:
-            filtered.append(t)
 
-    # Save discovered
-    discovery_file = DATA_DIR / "discovered_tickers.json"
-    existing = []
-    if discovery_file.exists():
-        with open(discovery_file) as f:
-            existing = json.load(f)
-
-    combined = list(set(existing + filtered))[:50]  # cap at 50 extra
+def _save_fundamentals_cache(cache: dict):
+    """Save fundamentals cache."""
     DATA_DIR.mkdir(exist_ok=True)
-    with open(discovery_file, "w") as f:
-        json.dump(combined, f)
-
-    return combined
+    with open(FUNDAMENTALS_CACHE, "w") as f:
+        json.dump(cache, f)
 
 
-def fetch_quote_data(tickers: list[str]) -> dict:
-    """Batch fetch current quotes for all tickers via yfinance."""
-    result = {}
-    # Process in chunks of 20
-    for i in range(0, len(tickers), 20):
-        chunk = tickers[i:i + 20]
-        try:
-            data = yf.download(chunk, period="5d", progress=False, auto_adjust=True, group_by="ticker")
-            if isinstance(data.columns, pd.MultiIndex):
-                for ticker in chunk:
-                    try:
-                        ticker_data = data[ticker] if len(chunk) > 1 else data
-                        if not ticker_data.empty:
-                            last_row = ticker_data.iloc[-1]
-                            prev_row = ticker_data.iloc[-2] if len(ticker_data) > 1 else last_row
-                            result[ticker] = {
-                                "price": float(last_row["Close"]),
-                                "prev_close": float(prev_row["Close"]),
-                                "volume": float(last_row["Volume"]) if "Volume" in last_row else 0,
-                            }
-                    except Exception:
-                        pass
-            else:
-                # Single ticker
-                if not data.empty:
-                    cols = data.columns
-                    if isinstance(cols, pd.MultiIndex):
-                        cols = cols.get_level_values(0)
-                    last_row = data.iloc[-1]
-                    prev_row = data.iloc[-2] if len(data) > 1 else last_row
-                    t = chunk[0]
-                    result[t] = {
-                        "price": float(last_row["Close"]) if "Close" in data.columns or ("Close" in str(data.columns)) else 0,
-                        "prev_close": float(prev_row["Close"]) if "Close" in data.columns or ("Close" in str(data.columns)) else 0,
-                    }
-        except Exception:
-            pass
-    return result
+def _is_cache_fresh(entry: dict) -> bool:
+    """Check if a cached fundamentals entry is still fresh."""
+    try:
+        cached_at = datetime.fromisoformat(entry.get("_cached_at", "2000-01-01"))
+        return datetime.utcnow() - cached_at < timedelta(hours=FUNDAMENTALS_STALE_HOURS)
+    except Exception:
+        return False
 
 
-def fetch_fundamentals(ticker: str) -> dict:
-    """Fetch fundamental data for a single ticker."""
+def fetch_fundamentals_cached(ticker: str, cache: dict) -> dict:
+    """Fetch fundamentals with caching. Returns cached data if fresh."""
+    if ticker in cache and _is_cache_fresh(cache[ticker]):
+        return cache[ticker]
+
+    data = _fetch_fundamentals_raw(ticker)
+    data["_cached_at"] = datetime.utcnow().isoformat()
+    cache[ticker] = data
+    return data
+
+
+def _fetch_fundamentals_raw(ticker: str) -> dict:
+    """Fetch fundamental data for a single ticker from yfinance."""
     try:
         info = yf.Ticker(ticker).info
         return {
@@ -184,26 +137,77 @@ def fetch_fundamentals(ticker: str) -> dict:
         }
 
 
-def compute_returns(closes: list[tuple[str, float]], current_price: float) -> dict:
-    """Compute returns over standard windows from daily closes."""
-    if not closes or current_price <= 0:
-        return {}
+# ── Batch price fetching ─────────────────────────────────────────────────
 
-    returns = {}
-    windows = {"1D": 1, "1W": 5, "1M": 21, "3M": 63, "6M": 126, "1Y": 252, "3Y": 756, "5Y": 1260}
+def batch_download_closes(tickers: list[str], days: int = 1300) -> dict[str, list[tuple[str, float]]]:
+    """Batch download daily closes for all tickers. Much faster than individual calls.
 
-    for label, days in windows.items():
-        if len(closes) > days:
-            ref_price = closes[-(days + 1)][1]
-            if ref_price > 0:
-                returns[label] = round((current_price / ref_price - 1) * 100, 2)
-            else:
-                returns[label] = None
-        else:
-            returns[label] = None
+    Returns: {ticker: [(date_str, close), ...]}
+    """
+    result = {}
+    end = datetime.now()
+    start = end - timedelta(days=days + 10)
 
-    return returns
+    chunk_size = 50
+    total_chunks = (len(tickers) + chunk_size - 1) // chunk_size
+    for i in range(0, len(tickers), chunk_size):
+        chunk = tickers[i:i + chunk_size]
+        chunk_num = i // chunk_size + 1
+        print(f"    chunk {chunk_num}/{total_chunks} ({len(chunk)} tickers)...", flush=True)
+        try:
+            df = yf.download(
+                chunk,
+                start=start.strftime("%Y-%m-%d"),
+                end=end.strftime("%Y-%m-%d"),
+                progress=False,
+                auto_adjust=True,
+                group_by="ticker",
+                threads=True,
+            )
 
+            if df.empty:
+                continue
+
+            for ticker in chunk:
+                try:
+                    if len(chunk) == 1:
+                        ticker_df = df
+                    else:
+                        if isinstance(df.columns, pd.MultiIndex):
+                            ticker_df = df[ticker]
+                        else:
+                            ticker_df = df
+
+                    if ticker_df.empty:
+                        continue
+
+                    # Handle multi-level columns
+                    if isinstance(ticker_df.columns, pd.MultiIndex):
+                        ticker_df.columns = ticker_df.columns.get_level_values(0)
+
+                    closes = []
+                    for idx, row in ticker_df.iterrows():
+                        try:
+                            close_val = float(row["Close"])
+                            if not math.isnan(close_val):
+                                closes.append((idx.strftime("%Y-%m-%d"), close_val))
+                        except (ValueError, KeyError):
+                            continue
+
+                    if closes:
+                        result[ticker] = closes[-days:]
+
+                except Exception:
+                    continue
+
+        except Exception as e:
+            print(f"  Batch download error for chunk starting at {i}: {e}")
+            continue
+
+    return result
+
+
+# ── Main processing ──────────────────────────────────────────────────────
 
 def process_all_stocks(holdings: Optional[dict] = None) -> list[dict]:
     """
@@ -216,39 +220,53 @@ def process_all_stocks(holdings: Optional[dict] = None) -> list[dict]:
         List of dicts, one per stock, sorted by personal score descending.
     """
     init_db()
-    tickers = get_stock_universe()
 
-    # Try to discover new trending stocks (best effort)
-    try:
-        discover_trending()
-        tickers = get_stock_universe()  # reload with discoveries
-    except Exception:
-        pass
-
-    results = []
+    # Step 1: Get the full universe
+    print("\n[1/5] Building stock universe...")
+    tickers = get_universe()
     total = len(tickers)
+    print(f"  {total} tickers to process")
+
+    # Step 2: Batch download price data
+    print(f"\n[2/5] Batch downloading price data ({total} tickers)...")
+    all_closes = batch_download_closes(tickers, days=1300)
+    print(f"  Got price data for {len(all_closes)}/{total} tickers")
+
+    # Step 3: Load fundamentals cache
+    print(f"\n[3/5] Fetching fundamentals (cached where fresh)...")
+    fund_cache = _load_fundamentals_cache()
+    stale_count = sum(1 for t in tickers if t not in fund_cache or not _is_cache_fresh(fund_cache.get(t, {})))
+    print(f"  {total - stale_count} cached, {stale_count} to fetch fresh")
+
+    # Step 4: Process each stock
+    print(f"\n[4/5] Computing intuition points and scores...")
+    results = []
+    errors = 0
 
     for idx, ticker in enumerate(tickers):
-        try:
-            print(f"[{idx + 1}/{total}] Processing {ticker}...")
+        if (idx + 1) % 100 == 0 or idx == 0:
+            print(f"  [{idx + 1}/{total}]...")
 
-            # Fetch 1Y+ daily closes (get extra for 3Y/5Y returns if available)
-            closes = get_daily_closes(ticker, days=1300)
+        try:
+            closes = all_closes.get(ticker)
             if not closes:
-                print(f"  Skipping {ticker}: no data")
                 continue
 
-            # Fundamentals
-            fundamentals = fetch_fundamentals(ticker)
+            # Fundamentals (with caching)
+            fundamentals = fetch_fundamentals_cached(ticker, fund_cache)
             current_price = closes[-1][1]
-            high_52w = fundamentals.get("52w_high", 0) or max(c for _, c in closes[-252:]) if len(closes) >= 252 else max(c for _, c in closes)
-            low_52w = fundamentals.get("52w_low", 0) or min(c for _, c in closes[-252:]) if len(closes) >= 252 else min(c for _, c in closes)
+
+            # 52W range from data
+            closes_1y = closes[-260:]
+            data_high = max(c for _, c in closes_1y) if closes_1y else 0
+            data_low = min(c for _, c in closes_1y) if closes_1y else 0
+            high_52w = fundamentals.get("52w_high", 0) or data_high
+            low_52w = fundamentals.get("52w_low", 0) or data_low
 
             # Returns
             returns = compute_returns(closes, current_price)
 
-            # Intuition point (use 1Y closes only for crossing detection)
-            closes_1y = closes[-260:]  # ~1 year
+            # Intuition point
             override = get_override(ticker)
             intuition = compute_intuition_point(closes_1y, current_price, high_52w, override)
 
@@ -310,8 +328,15 @@ def process_all_stocks(holdings: Optional[dict] = None) -> list[dict]:
             results.append(row)
 
         except Exception as e:
-            print(f"  Error processing {ticker}: {e}")
+            errors += 1
+            if errors <= 5:
+                print(f"  Error: {ticker}: {e}")
             continue
+
+    # Save fundamentals cache
+    _save_fundamentals_cache(fund_cache)
+    if errors > 5:
+        print(f"  ({errors} total errors)")
 
     # Sort by personal score descending, then evidence score
     results.sort(key=lambda r: (-r["personal_score"], -r["evidence_score"]))
@@ -319,6 +344,8 @@ def process_all_stocks(holdings: Optional[dict] = None) -> list[dict]:
     # Assign ranks
     for i, r in enumerate(results, 1):
         r["rank"] = i
+
+    print(f"  Processed {len(results)} stocks ({errors} errors)")
 
     # Log refresh
     conn = sqlite3.connect(str(DB_PATH))
@@ -330,3 +357,24 @@ def process_all_stocks(holdings: Optional[dict] = None) -> list[dict]:
     conn.close()
 
     return results
+
+
+def compute_returns(closes: list[tuple[str, float]], current_price: float) -> dict:
+    """Compute returns over standard windows from daily closes."""
+    if not closes or current_price <= 0:
+        return {}
+
+    returns = {}
+    windows = {"1D": 1, "1W": 5, "1M": 21, "3M": 63, "6M": 126, "1Y": 252, "3Y": 756, "5Y": 1260}
+
+    for label, days in windows.items():
+        if len(closes) > days:
+            ref_price = closes[-(days + 1)][1]
+            if ref_price > 0:
+                returns[label] = round((current_price / ref_price - 1) * 100, 2)
+            else:
+                returns[label] = None
+        else:
+            returns[label] = None
+
+    return returns
