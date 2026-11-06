@@ -44,7 +44,7 @@ def render_html(stocks: list[dict], output_path: Path = None) -> str:
 }}
 * {{ margin:0; padding:0; box-sizing:border-box; }}
 body {{ background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,monospace; font-size:13px; }}
-.header {{ background:var(--surface); border-bottom:1px solid var(--border); padding:12px 16px; position:sticky; top:0; z-index:100; }}
+.header {{ background:var(--surface); border-bottom:1px solid var(--border); padding:12px 16px; }}
 .header h1 {{ font-size:16px; font-weight:600; }}
 .header .meta {{ font-size:11px; color:var(--text-dim); margin-top:4px; }}
 .stats {{ display:flex; gap:16px; margin-top:6px; font-size:11px; }}
@@ -54,7 +54,7 @@ body {{ background:var(--bg); color:var(--text); font-family:-apple-system,Blink
 .filters select {{ background:var(--bg); border:1px solid var(--border); color:var(--text); padding:4px 8px; border-radius:4px; font-size:12px; }}
 .table-wrap {{ overflow-x:auto; }}
 table {{ border-collapse:collapse; width:100%; min-width:1600px; }}
-th {{ background:var(--surface); position:sticky; top:64px; z-index:50; padding:6px 8px; text-align:left;
+th {{ background:var(--surface); position:sticky; top:0; z-index:50; padding:6px 8px; text-align:left;
      font-size:11px; font-weight:600; color:var(--text-dim); border-bottom:2px solid var(--border);
      cursor:pointer; white-space:nowrap; user-select:none; }}
 th:hover {{ color:var(--accent); }}
