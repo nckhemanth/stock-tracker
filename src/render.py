@@ -4,7 +4,7 @@ Mobile-friendly, dark theme, sortable columns, working filters.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from html import escape
 from pathlib import Path
 
@@ -18,7 +18,13 @@ def render_html(stocks: list[dict], output_path: Path = None) -> str:
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    pst = timezone(timedelta(hours=-8), "PST")
+    pdt = timezone(timedelta(hours=-7), "PDT")
+    # Use PDT Mar-Nov, PST Nov-Mar (approximate)
+    utc_now = datetime.now(timezone.utc)
+    month = utc_now.month
+    tz = pdt if 3 <= month <= 10 else pst
+    now = utc_now.astimezone(tz).strftime("%Y-%m-%d %I:%M %p %Z")
     total = len(stocks)
     with_intuition = sum(1 for s in stocks if s.get("intuition_point"))
     held = sum(1 for s in stocks if s.get("i_hold"))
