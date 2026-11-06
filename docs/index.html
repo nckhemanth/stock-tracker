@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stock Tracker | 2026-11-06 09:22 AM PST</title>
+<title>Stock Tracker | 2026-11-06 09:25 AM PST</title>
 <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --border: #30363d;
@@ -20,6 +20,27 @@ body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkM
 .header .meta { font-size:11px; color:var(--dim); margin-top:3px; }
 .stats { display:flex; gap:12px; margin-top:8px; font-size:11px; flex-wrap:wrap; }
 .stats span { background:var(--border); padding:3px 10px; border-radius:4px; }
+
+/* Dashboard */
+.dashboard { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; padding:12px 16px; background:var(--bg); border-bottom:1px solid var(--border); }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+.card-title { font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--dim); margin-bottom:8px; font-weight:600; }
+.card-row { display:flex; justify-content:space-between; align-items:center; padding:2px 0; font-size:12px; }
+.card-row .label { color:var(--dim); }
+.card-row .value { font-weight:600; font-variant-numeric:tabular-nums; }
+.card-big { font-size:22px; font-weight:700; margin:4px 0; }
+.card-sub { font-size:10px; color:var(--dim); }
+.severity { display:inline-block; padding:3px 10px; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.5px; }
+.sev-brutal { background:rgba(248,81,73,0.2); color:var(--red); }
+.sev-rough { background:rgba(219,109,40,0.2); color:var(--orange); }
+.sev-mixed { background:rgba(210,153,34,0.15); color:var(--yellow); }
+.sev-green { background:rgba(63,185,80,0.15); color:var(--green); }
+.sev-rally { background:rgba(63,185,80,0.25); color:var(--green); }
+.bar-wrap { height:6px; background:var(--border); border-radius:3px; margin-top:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:3px; }
+.bar-red { background:var(--red); }
+.bar-green { background:var(--green); }
+.bar-yellow { background:var(--yellow); }
 
 /* Filters */
 .filters { padding:8px 16px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
@@ -91,13 +112,42 @@ tr.held { background:var(--hold-bg); }
 
 <div class="header">
   <h1>Stock Tracker</h1>
-  <div class="meta">Last refresh: 2026-11-06 09:22 AM PST | Next: auto-scheduled</div>
+  <div class="meta">Last refresh: 2026-11-06 09:25 AM PST | Next: auto-scheduled</div>
   <div class="stats">
     <span>937 stocks</span>
     <span>702 with intuition points</span>
     <span>144 held in portfolio</span>
   </div>
 </div>
+
+<div class="dashboard"><div class="card">
+  <div class="card-title">Market Today</div>
+  <div class="card-row"><span class="label">S&P 500</span><span class="value pos">+0.9%</span></div><div class="card-row"><span class="label">NASDAQ</span><span class="value pos">+1.6%</span></div><div class="card-row"><span class="label">Dow Jones</span><span class="value pos">+0.1%</span></div><div class="card-row"><span class="label">Russell 2000</span><span class="value pos">+0.9%</span></div><div class="card-row"><span class="label">VIX</span><span class="value">24.2 <span class="neg">(-14.0%)</span></span></div>
+  <div style="margin-top:8px"><span class="severity sev-brutal">BRUTAL</span> <span class="card-sub">Extreme selling across the board</span></div>
+</div><div class="card">
+  <div class="card-title">Today Across 937 Stocks</div>
+  <div class="card-row"><span class="label">Avg move</span><span class="value neg">-3.6%</span></div>
+  <div class="card-row"><span class="label neg">▼ Down</span><span class="value">816</span></div>
+  <div class="card-row"><span class="label pos">▲ Up</span><span class="value">121</span></div>
+  <div class="bar-wrap"><div class="bar-fill bar-red" style="width:87%"></div></div>
+  <div class="card-row" style="margin-top:4px"><span class="label">Worst</span><span class="value neg">SNDK -22.3%</span></div>
+  <div class="card-row"><span class="label">Best</span><span class="value pos">APP +31.0%</span></div>
+</div><div class="card">
+  <div class="card-title">Your Portfolio (144 held)</div>
+  <div class="card-row"><span class="label">Today avg</span><span class="value neg">-5.8%</span></div>
+  <div class="card-row"><span class="label pos">▲ Up</span><span class="value">9</span></div>
+  <div class="card-row"><span class="label neg">▼ Down</span><span class="value">135</span></div>
+  <div class="card-row"><span class="label">Avg P&L</span><span class="value pos">+57%</span></div>
+  <div class="card-row"><span class="label">In red</span><span class="value neg">36 positions</span></div>
+  <div class="card-row"><span class="label">Invested</span><span class="value">$671</span></div>
+</div><div class="card">
+  <div class="card-title">Drawdown & Opportunity</div>
+  <div class="card-row"><span class="label">Avg below 52W high</span><span class="value neg">-22%</span></div>
+  <div class="card-row"><span class="label">Deep drawdown (&gt;30%)</span><span class="value neg">238 stocks</span></div>
+  <div class="card-row"><span class="label">With positive upside</span><span class="value pos">702</span></div>
+  <div class="card-row"><span class="label">Avg upside to IP</span><span class="value pos">+20%</span></div>
+  <div class="card-row"><span class="label">&gt;50% upside</span><span class="value">57 stocks</span></div>
+</div></div>
 
 <div class="filters">
   <input type="text" id="search" placeholder="Search ticker or name..." oninput="filterTable()">

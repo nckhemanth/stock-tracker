@@ -10,7 +10,7 @@ from datetime import datetime
 
 from src.scheduler import is_trading_day, is_market_hours
 from src.holdings import get_robinhood_holdings
-from src.data_engine import process_all_stocks
+from src.data_engine import process_all_stocks, fetch_market_indices
 from src.render import render_html
 from src.notify import send_refresh_email
 
@@ -37,9 +37,14 @@ def main(force: bool = False):
         print("ERROR: No stocks processed. Aborting.")
         sys.exit(1)
 
+    # Fetch market indices for dashboard
+    print("\nFetching market indices...")
+    indices = fetch_market_indices()
+    print(f"  Got {len(indices)} indices")
+
     # 6. Render HTML
-    print(f"\n[5/5] Rendering HTML...")
-    output = render_html(stocks)
+    print(f"\nRendering HTML...")
+    output = render_html(stocks, indices=indices)
     print(f"  Written to {output}")
 
     # Send email

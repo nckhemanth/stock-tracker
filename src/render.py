@@ -11,16 +11,17 @@ from pathlib import Path
 from .config import OUTPUT_DIR
 
 
-def render_html(stocks: list[dict], output_path: Path = None) -> str:
-    """Generate the full HTML page with stock table."""
+def render_html(stocks: list[dict], output_path: Path = None, indices: dict = None) -> str:
+    """Generate the full HTML page with stock table and dashboard."""
     if output_path is None:
         output_path = OUTPUT_DIR / "index.html"
+    if indices is None:
+        indices = {}
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     pst = timezone(timedelta(hours=-8), "PST")
     pdt = timezone(timedelta(hours=-7), "PDT")
-    # Use PDT Mar-Nov, PST Nov-Mar (approximate)
     utc_now = datetime.now(timezone.utc)
     month = utc_now.month
     tz = pdt if 3 <= month <= 10 else pst
@@ -29,6 +30,7 @@ def render_html(stocks: list[dict], output_path: Path = None) -> str:
     with_intuition = sum(1 for s in stocks if s.get("intuition_point"))
     held = sum(1 for s in stocks if s.get("i_hold"))
 
+    dashboard_html = _render_dashboard(stocks, indices)
     rows_html = "\n".join(_render_row(s) for s in stocks)
     stocks_json = json.dumps(stocks, default=str)
 
@@ -37,6 +39,7 @@ def render_html(stocks: list[dict], output_path: Path = None) -> str:
         total=total,
         with_intuition=with_intuition,
         held=held,
+        dashboard=dashboard_html,
         table_body=rows_html,
         stocks_json=stocks_json,
     )
@@ -48,6 +51,127 @@ def render_html(stocks: list[dict], output_path: Path = None) -> str:
 def _esc(val) -> str:
     """HTML-escape a value for use in attributes."""
     return escape(str(val), quote=True)
+
+
+def _render_dashboard(stocks: list[dict], indices: dict) -> str:
+    """Build the dashboard summary cards."""
+    if not stocks:
+        return ""
+
+    # ── Compute aggregates ────────────────────────────────────────────
+    changes_1d = [s["1D"] for s in stocks if s.get("1D") is not None]
+    avg_1d = sum(changes_1d) / len(changes_1d) if changes_1d else 0
+    up_today = sum(1 for c in changes_1d if c > 0)
+    down_today = sum(1 for c in changes_1d if c < 0)
+
+    # Worst and best today
+    if changes_1d:
+        worst_stock = min(stocks, key=lambda s: s.get("1D") or 0)
+        best_stock = max(stocks, key=lambda s: s.get("1D") or 0)
+    else:
+        worst_stock = best_stock = {"ticker": "—", "1D": 0}
+
+    # Drawdown from 52W high
+    below_highs = []
+    for s in stocks:
+        p = s.get("price", 0) or 0
+        h = s.get("52w_high", 0) or 0
+        if p > 0 and h > 0:
+            below_highs.append((p / h - 1) * 100)
+    avg_below_high = sum(below_highs) / len(below_highs) if below_highs else 0
+    deep_drawdown = sum(1 for b in below_highs if b < -30)
+
+    # Held stocks
+    held_stocks = [s for s in stocks if s.get("i_hold")]
+    held_up = sum(1 for s in held_stocks if (s.get("1D") or 0) > 0)
+    held_down = sum(1 for s in held_stocks if (s.get("1D") or 0) < 0)
+    total_invested = sum(s.get("invested", 0) or 0 for s in held_stocks)
+    held_1d = [s.get("1D", 0) or 0 for s in held_stocks]
+    avg_held_1d = sum(held_1d) / len(held_1d) if held_1d else 0
+    held_pnl = [s.get("holding_pnl_pct") for s in held_stocks if s.get("holding_pnl_pct") is not None]
+    avg_held_pnl = sum(held_pnl) / len(held_pnl) if held_pnl else 0
+    held_in_red = sum(1 for p in held_pnl if p < 0)
+
+    # Opportunity stats
+    with_upside = [s for s in stocks if (s.get("upside_pct") or 0) > 0]
+    avg_upside = sum(s["upside_pct"] for s in with_upside) / len(with_upside) if with_upside else 0
+    big_upside = sum(1 for s in with_upside if s["upside_pct"] >= 50)
+
+    # ── Severity assessment ───────────────────────────────────────────
+    if avg_1d <= -3:
+        sev_label, sev_cls, sev_desc = "BRUTAL", "sev-brutal", "Extreme selling across the board"
+    elif avg_1d <= -1.5:
+        sev_label, sev_cls, sev_desc = "ROUGH", "sev-rough", "Broad market pressure"
+    elif avg_1d <= -0.5:
+        sev_label, sev_cls, sev_desc = "SOFT", "sev-mixed", "Mild weakness"
+    elif avg_1d <= 0.5:
+        sev_label, sev_cls, sev_desc = "FLAT", "sev-mixed", "Choppy, no clear direction"
+    elif avg_1d <= 1.5:
+        sev_label, sev_cls, sev_desc = "GREEN", "sev-green", "Broad buying pressure"
+    else:
+        sev_label, sev_cls, sev_desc = "RALLY", "sev-rally", "Strong broad rally"
+
+    # ── Card 1: Market Today ──────────────────────────────────────────
+    idx_rows = ""
+    for name in ["S&P 500", "NASDAQ", "Dow Jones", "Russell 2000", "VIX"]:
+        data = indices.get(name)
+        if not data:
+            continue
+        val = data["value"]
+        chg = data["change_pct"]
+        color = "pos" if chg > 0 else "neg" if chg < 0 else ""
+        sign = "+" if chg > 0 else ""
+        if name == "VIX":
+            idx_rows += f'<div class="card-row"><span class="label">{name}</span><span class="value">{val:.1f} <span class="{color}">({sign}{chg:.1f}%)</span></span></div>'
+        else:
+            idx_rows += f'<div class="card-row"><span class="label">{name}</span><span class="value {color}">{sign}{chg:.1f}%</span></div>'
+
+    card_market = f"""<div class="card">
+  <div class="card-title">Market Today</div>
+  {idx_rows}
+  <div style="margin-top:8px"><span class="severity {sev_cls}">{sev_label}</span> <span class="card-sub">{sev_desc}</span></div>
+</div>"""
+
+    # ── Card 2: Your Stocks Today ─────────────────────────────────────
+    up_pct = round(up_today / len(changes_1d) * 100) if changes_1d else 0
+    avg_1d_color = "pos" if avg_1d > 0 else "neg" if avg_1d < 0 else ""
+    worst_1d = worst_stock.get("1D") or 0
+    best_1d = best_stock.get("1D") or 0
+    card_stocks = f"""<div class="card">
+  <div class="card-title">Today Across {len(changes_1d)} Stocks</div>
+  <div class="card-row"><span class="label">Avg move</span><span class="value {avg_1d_color}">{"+" if avg_1d > 0 else ""}{avg_1d:.1f}%</span></div>
+  <div class="card-row"><span class="label neg">▼ Down</span><span class="value">{down_today}</span></div>
+  <div class="card-row"><span class="label pos">▲ Up</span><span class="value">{up_today}</span></div>
+  <div class="bar-wrap"><div class="bar-fill bar-red" style="width:{100-up_pct}%"></div></div>
+  <div class="card-row" style="margin-top:4px"><span class="label">Worst</span><span class="value neg">{worst_stock['ticker']} {worst_1d:+.1f}%</span></div>
+  <div class="card-row"><span class="label">Best</span><span class="value pos">{best_stock['ticker']} {best_1d:+.1f}%</span></div>
+</div>"""
+
+    # ── Card 3: Portfolio ─────────────────────────────────────────────
+    held_1d_color = "pos" if avg_held_1d > 0 else "neg" if avg_held_1d < 0 else ""
+    pnl_color = "pos" if avg_held_pnl > 0 else "neg" if avg_held_pnl < 0 else ""
+    card_portfolio = f"""<div class="card">
+  <div class="card-title">Your Portfolio ({len(held_stocks)} held)</div>
+  <div class="card-row"><span class="label">Today avg</span><span class="value {held_1d_color}">{"+" if avg_held_1d > 0 else ""}{avg_held_1d:.1f}%</span></div>
+  <div class="card-row"><span class="label pos">▲ Up</span><span class="value">{held_up}</span></div>
+  <div class="card-row"><span class="label neg">▼ Down</span><span class="value">{held_down}</span></div>
+  <div class="card-row"><span class="label">Avg P&L</span><span class="value {pnl_color}">{"+" if avg_held_pnl > 0 else ""}{avg_held_pnl:.0f}%</span></div>
+  <div class="card-row"><span class="label">In red</span><span class="value neg">{held_in_red} positions</span></div>
+  <div class="card-row"><span class="label">Invested</span><span class="value">${total_invested:,.0f}</span></div>
+</div>"""
+
+    # ── Card 4: Drawdown & Opportunity ────────────────────────────────
+    avg_bh_color = "neg" if avg_below_high < -20 else "neg" if avg_below_high < 0 else "pos"
+    card_opportunity = f"""<div class="card">
+  <div class="card-title">Drawdown & Opportunity</div>
+  <div class="card-row"><span class="label">Avg below 52W high</span><span class="value {avg_bh_color}">{avg_below_high:.0f}%</span></div>
+  <div class="card-row"><span class="label">Deep drawdown (&gt;30%)</span><span class="value neg">{deep_drawdown} stocks</span></div>
+  <div class="card-row"><span class="label">With positive upside</span><span class="value pos">{len(with_upside)}</span></div>
+  <div class="card-row"><span class="label">Avg upside to IP</span><span class="value pos">+{avg_upside:.0f}%</span></div>
+  <div class="card-row"><span class="label">&gt;50% upside</span><span class="value">{big_upside} stocks</span></div>
+</div>"""
+
+    return f'<div class="dashboard">{card_market}{card_stocks}{card_portfolio}{card_opportunity}</div>'
 
 
 def _render_row(s: dict) -> str:
@@ -240,6 +364,27 @@ body {{ background:var(--bg); color:var(--text); font-family:-apple-system,Blink
 .stats {{ display:flex; gap:12px; margin-top:8px; font-size:11px; flex-wrap:wrap; }}
 .stats span {{ background:var(--border); padding:3px 10px; border-radius:4px; }}
 
+/* Dashboard */
+.dashboard {{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; padding:12px 16px; background:var(--bg); border-bottom:1px solid var(--border); }}
+.card {{ background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }}
+.card-title {{ font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--dim); margin-bottom:8px; font-weight:600; }}
+.card-row {{ display:flex; justify-content:space-between; align-items:center; padding:2px 0; font-size:12px; }}
+.card-row .label {{ color:var(--dim); }}
+.card-row .value {{ font-weight:600; font-variant-numeric:tabular-nums; }}
+.card-big {{ font-size:22px; font-weight:700; margin:4px 0; }}
+.card-sub {{ font-size:10px; color:var(--dim); }}
+.severity {{ display:inline-block; padding:3px 10px; border-radius:4px; font-size:11px; font-weight:700; letter-spacing:0.5px; }}
+.sev-brutal {{ background:rgba(248,81,73,0.2); color:var(--red); }}
+.sev-rough {{ background:rgba(219,109,40,0.2); color:var(--orange); }}
+.sev-mixed {{ background:rgba(210,153,34,0.15); color:var(--yellow); }}
+.sev-green {{ background:rgba(63,185,80,0.15); color:var(--green); }}
+.sev-rally {{ background:rgba(63,185,80,0.25); color:var(--green); }}
+.bar-wrap {{ height:6px; background:var(--border); border-radius:3px; margin-top:4px; overflow:hidden; }}
+.bar-fill {{ height:100%; border-radius:3px; }}
+.bar-red {{ background:var(--red); }}
+.bar-green {{ background:var(--green); }}
+.bar-yellow {{ background:var(--yellow); }}
+
 /* Filters */
 .filters {{ padding:8px 16px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; align-items:center; }}
 .filters input {{ background:var(--bg); border:1px solid var(--border); color:var(--text); padding:5px 10px; border-radius:4px; font-size:12px; width:200px; }}
@@ -317,6 +462,8 @@ tr.held {{ background:var(--hold-bg); }}
     <span>{held} held in portfolio</span>
   </div>
 </div>
+
+{dashboard}
 
 <div class="filters">
   <input type="text" id="search" placeholder="Search ticker or name..." oninput="filterTable()">

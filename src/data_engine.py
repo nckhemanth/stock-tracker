@@ -207,6 +207,52 @@ def batch_download_closes(tickers: list[str], days: int = 1300) -> dict[str, lis
     return result
 
 
+# ── Market indices ────────────────────────────────────────────────────────
+
+def fetch_market_indices() -> dict:
+    """Fetch major market index data for the dashboard."""
+    indices = {
+        "^GSPC": "S&P 500",
+        "^IXIC": "NASDAQ",
+        "^DJI": "Dow Jones",
+        "^VIX": "VIX",
+        "^RUT": "Russell 2000",
+    }
+    result = {}
+    try:
+        df = yf.download(
+            list(indices.keys()), period="5d", progress=False,
+            auto_adjust=True, group_by="ticker", threads=True,
+        )
+        for symbol, name in indices.items():
+            try:
+                if len(indices) > 1 and isinstance(df.columns, pd.MultiIndex):
+                    ticker_df = df[symbol]
+                else:
+                    ticker_df = df
+
+                if ticker_df.empty:
+                    continue
+
+                if isinstance(ticker_df.columns, pd.MultiIndex):
+                    ticker_df.columns = ticker_df.columns.get_level_values(0)
+
+                last = float(ticker_df.iloc[-1]["Close"])
+                prev = float(ticker_df.iloc[-2]["Close"]) if len(ticker_df) > 1 else last
+                change_pct = round((last / prev - 1) * 100, 2) if prev else 0
+
+                result[name] = {
+                    "value": round(last, 2),
+                    "change_pct": change_pct,
+                }
+            except Exception:
+                continue
+    except Exception as e:
+        print(f"  Warning: could not fetch indices: {e}")
+
+    return result
+
+
 # ── Main processing ──────────────────────────────────────────────────────
 
 def process_all_stocks(holdings: Optional[dict] = None) -> list[dict]:
